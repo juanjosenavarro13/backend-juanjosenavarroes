@@ -2,7 +2,7 @@
   "name": "backend-juanjosenavarroes",
   "author": "Juan José Navarro Perea",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.1.0",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
