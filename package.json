@@ -13,7 +13,8 @@
     "lint:check": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier --write src",
     "format:check": "prettier --check src",
-    "test": "jest --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "delete-old-branch": "git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d",
     "prepare": "husky"
