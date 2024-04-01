@@ -67,6 +67,11 @@ jobs:
         with:
           version: 8.15.5
 
+      - name: Set up environment variables
+        env:
+          POSTGRES_PRISMA_URL: mock://localhost:54320
+        run: echo "Shadow database URL set for Prisma mock"
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:

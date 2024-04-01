@@ -21,7 +21,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-      - run: pnpm run build
       - name: Apply all pending migrations to the database
         run: pnpm prisma migrate deploy
         env:
