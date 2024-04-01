@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { PrismaService } from '../prisma/prisma.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -10,7 +9,14 @@ describe('AuthController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [AuthService, PrismaService],
+      providers: [
+        {
+          provide: AuthService,
+          useValue: {
+            register: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
@@ -21,16 +27,15 @@ describe('AuthController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('endpoint register should call authService.register', () => {
-    const data = {
+  it('endpoint register should call authService.register', async () => {
+    const registerDTO = {
       email: 'email@email.es',
       password: '123123',
       password_confirmation: '123123',
     };
-    const authServiceRegisterSpy = jest.spyOn(authService, 'register');
 
-    controller.register(data);
+    await controller.register(registerDTO);
 
-    expect(authServiceRegisterSpy).toHaveBeenCalledWith(data);
+    expect(authService.register).toHaveBeenCalledWith(registerDTO);
   });
 });
