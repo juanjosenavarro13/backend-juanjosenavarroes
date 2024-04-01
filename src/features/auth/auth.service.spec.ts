@@ -4,7 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { RegisterDTO } from './DTOS/register.dto';
 
-describe.skip('AuthService', () => {
+describe('AuthService', () => {
   let service: AuthService;
   let prismaService: PrismaService;
 
