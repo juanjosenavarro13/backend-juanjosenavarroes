@@ -18,6 +18,7 @@
     "test:coverage": "jest --coverage",
     "delete-old-branch": "git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d",
     "prisma:migrate": "npx prisma migrate dev",
+    "postinstall": "prisma generate",
     "prepare": "husky"
   },
   "dependencies": {
