@@ -5,6 +5,7 @@ import { AuthService } from './auth.service';
 import { LoginDTO, RegisterDTO } from './DTOS';
 import { SALT_CRYPTO } from '../../constants/config';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -12,7 +13,7 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService, PrismaService],
+      providers: [AuthService, PrismaService, JwtService],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
