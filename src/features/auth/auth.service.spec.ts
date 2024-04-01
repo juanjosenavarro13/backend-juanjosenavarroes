@@ -17,10 +17,6 @@ describe('AuthService', () => {
     prismaService = module.get<PrismaService>(PrismaService);
   });
 
-  afterAll(async () => {
-    await prismaService.$disconnect();
-  });
-
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
