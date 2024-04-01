@@ -10,21 +10,15 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        AuthService,
-        {
-          provide: PrismaService,
-          useValue: {
-            user: {
-              create: jest.fn(() => ({})),
-            },
-          },
-        },
-      ],
+      providers: [AuthService, PrismaService],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
     prismaService = module.get<PrismaService>(PrismaService);
+  });
+
+  afterAll(async () => {
+    await prismaService.$disconnect();
   });
 
   it('should be defined', () => {
