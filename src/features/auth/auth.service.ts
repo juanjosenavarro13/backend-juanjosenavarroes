@@ -63,7 +63,10 @@ export class AuthService {
       );
     }
 
-    return { id: user.id, email: user.email };
+    const payload = { id: user.id, email: user.email };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
   }
 
   private async hashPassword(password: string): Promise<string> {

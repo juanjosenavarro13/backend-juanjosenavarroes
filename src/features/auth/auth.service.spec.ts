@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 describe('AuthService', () => {
   let service: AuthService;
   let prismaService: PrismaService;
+  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -18,6 +19,7 @@ describe('AuthService', () => {
 
     service = module.get<AuthService>(AuthService);
     prismaService = module.get<PrismaService>(PrismaService);
+    jwtService = module.get<JwtService>(JwtService);
   });
 
   afterAll(async () => {
@@ -152,10 +154,11 @@ describe('AuthService', () => {
       };
 
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(mockUser);
+      jest.spyOn(jwtService, 'signAsync').mockResolvedValue('token');
 
       const result = await service.login(loginDTO);
 
-      expect(result).toEqual({ id: mockUser.id, email: mockUser.email });
+      expect(result).toEqual({ access_token: 'token' });
     });
   });
 });
