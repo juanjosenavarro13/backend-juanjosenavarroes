@@ -10,7 +10,17 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService, PrismaService],
+      providers: [
+        AuthService,
+        {
+          provide: PrismaService,
+          useValue: {
+            user: {
+              create: jest.fn(() => ({})),
+            },
+          },
+        },
+      ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
