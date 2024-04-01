@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { RegisterDTO } from './DTOS/register.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { LoginDTO, RegisterDTO } from './DTOS';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -10,7 +10,7 @@ export class AuthController {
 
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'Errores de validacion',
+    description: 'Las contraseñas no coinciden',
   })
   @ApiResponse({
     status: HttpStatus.CREATED,
@@ -20,5 +20,19 @@ export class AuthController {
   @Post('register')
   register(@Body() registerDTO: RegisterDTO) {
     return this.AuthService.register(registerDTO);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Inicio sesión incorrecto',
+  })
+  @ApiResponse({
+    status: HttpStatus.ACCEPTED,
+    description: 'Inicio sesión correcto',
+  })
+  @HttpCode(HttpStatus.ACCEPTED)
+  @Post('login')
+  login(@Body() loginDTO: LoginDTO) {
+    return this.AuthService.login(loginDTO);
   }
 }

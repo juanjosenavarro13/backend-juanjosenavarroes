@@ -1,20 +1,25 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
-import { PrismaService } from '../prisma/prisma.service';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { RegisterDTO } from './DTOS/register.dto';
+import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaService } from '../prisma/prisma.service';
+import { AuthService } from './auth.service';
+import { LoginDTO, RegisterDTO } from './DTOS';
+import { SALT_CRYPTO } from '../../constants/config';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 describe('AuthService', () => {
   let service: AuthService;
   let prismaService: PrismaService;
+  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService, PrismaService],
+      providers: [AuthService, PrismaService, JwtService],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
     prismaService = module.get<PrismaService>(PrismaService);
+    jwtService = module.get<JwtService>(JwtService);
   });
 
   afterAll(async () => {
@@ -34,7 +39,10 @@ describe('AuthService', () => {
       };
 
       await expect(service.register(registerDTO)).rejects.toThrow(
-        new HttpException('Invalid passwords', HttpStatus.BAD_REQUEST),
+        new HttpException(
+          'Las contraseñas no coinciden',
+          HttpStatus.BAD_REQUEST,
+        ),
       );
     });
 
@@ -91,6 +99,66 @@ describe('AuthService', () => {
       await expect(service.register(registerDTO)).rejects.toThrow(
         'Some other error',
       );
+    });
+  });
+
+  describe('login', () => {
+    it('should throw an error if email is not found', async () => {
+      const loginDTO: LoginDTO = {
+        email: 'nonexistent@example.com',
+        password: 'password',
+      };
+
+      jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(null);
+
+      await expect(service.login(loginDTO)).rejects.toThrow(
+        new HttpException(
+          'Contraseña o email inválidos',
+          HttpStatus.UNAUTHORIZED,
+        ),
+      );
+    });
+
+    it('should throw an error if password does not match', async () => {
+      const loginDTO: LoginDTO = {
+        email: 'test@example.com',
+        password: 'wrongpassword',
+      };
+
+      const mockUser = {
+        id: 1,
+        email: 'test@example.com',
+        password: await bcrypt.hash('password', SALT_CRYPTO),
+      };
+
+      jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(mockUser);
+
+      await expect(service.login(loginDTO)).rejects.toThrow(
+        new HttpException(
+          'Contraseña o email inválidos',
+          HttpStatus.UNAUTHORIZED,
+        ),
+      );
+    });
+
+    it('should return user data if email and password match', async () => {
+      const loginDTO: LoginDTO = {
+        email: 'test@example.com',
+        password: 'password',
+      };
+
+      const mockUser = {
+        id: 1,
+        email: 'test@example.com',
+        password: await bcrypt.hash('password', SALT_CRYPTO),
+      };
+
+      jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(mockUser);
+      jest.spyOn(jwtService, 'signAsync').mockResolvedValue('token');
+
+      const result = await service.login(loginDTO);
+
+      expect(result).toEqual({ access_token: 'token' });
     });
   });
 });

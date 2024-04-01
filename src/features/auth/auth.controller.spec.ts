@@ -14,6 +14,7 @@ describe('AuthController', () => {
           provide: AuthService,
           useValue: {
             register: jest.fn(),
+            login: jest.fn(),
           },
         },
       ],
@@ -37,5 +38,16 @@ describe('AuthController', () => {
     await controller.register(registerDTO);
 
     expect(authService.register).toHaveBeenCalledWith(registerDTO);
+  });
+
+  it('endpoint register should call authService.login', async () => {
+    const loginDTO = {
+      email: 'email@email.es',
+      password: '123123',
+    };
+
+    await controller.login(loginDTO);
+
+    expect(authService.login).toHaveBeenCalledWith(loginDTO);
   });
 });
