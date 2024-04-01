@@ -3,7 +3,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { PrismaService } from '../prisma/prisma.service';
 
-describe.skip('AuthController', () => {
+describe('AuthController', () => {
   let controller: AuthController;
   let authService: AuthService;
 
