@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import * as bcrypt from 'bcrypt';
-import { PrismaService } from '../../services/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDTO } from './DTOS/register.dto';
 import { SALT_CRYPTO } from '../../constants/config';
 
