@@ -1,7 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
-import { PrismaService } from '../../services/prisma.service';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaService } from '../../services/prisma.service';
+import { mockPrismaService } from '../../services/prisma.service.mock';
+import { AuthService } from './auth.service';
 import { RegisterDTO } from './DTOS/register.dto';
 
 describe('AuthService', () => {
@@ -10,7 +11,10 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService, PrismaService],
+      providers: [
+        AuthService,
+        { provide: PrismaService, useValue: mockPrismaService },
+      ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
