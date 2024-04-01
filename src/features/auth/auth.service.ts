@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import * as bcrypt from 'bcrypt';
-import { PrismaService } from '../prisma/prisma.service';
-import { RegisterDTO } from './DTOS/register.dto';
 import { SALT_CRYPTO } from '../../constants/config';
+import { PrismaService } from '../prisma/prisma.service';
+import { LoginDTO, RegisterDTO } from './DTOS';
 
 @Injectable()
 export class AuthService {
@@ -30,5 +30,23 @@ export class AuthService {
         }
         throw error;
       });
+  }
+
+  async login(loginDTO: LoginDTO) {
+    const user = await this.prismaService.user.findUnique({
+      where: { email: loginDTO.email },
+    });
+
+    if (!user) throw new HttpException('Invalid user', HttpStatus.UNAUTHORIZED);
+
+    const passwordMatch = await bcrypt.compare(
+      loginDTO.password,
+      user.password,
+    );
+    if (!passwordMatch) {
+      throw new HttpException('Invalid user', HttpStatus.UNAUTHORIZED);
+    }
+
+    return { id: user.id, email: user.email };
   }
 }
