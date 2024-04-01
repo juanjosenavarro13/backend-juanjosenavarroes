@@ -1,8 +1,7 @@
-// prisma.service.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from './prisma.service';
 
-describe.skip('PrismaService', () => {
+describe('PrismaService', () => {
   let prismaService: PrismaService;
 
   beforeEach(async () => {
