@@ -158,7 +158,10 @@ describe('AuthService', () => {
 
       const result = await service.login(loginDTO);
 
-      expect(result).toEqual({ access_token: 'token' });
+      expect(result).toEqual({
+        access_token: 'token',
+        user: { id: mockUser.id, email: mockUser.email },
+      });
     });
   });
 });
