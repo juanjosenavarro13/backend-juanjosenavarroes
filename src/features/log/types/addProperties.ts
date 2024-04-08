@@ -1,4 +1,4 @@
-export type typeLog = 'Auth' | 'no Scope';
+export type typeLog = 'Register' | 'Login' | 'no Scope';
 export type AddProps = {
   logInfo: string;
   userid?: number;

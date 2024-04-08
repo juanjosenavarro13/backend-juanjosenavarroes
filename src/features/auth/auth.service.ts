@@ -28,6 +28,15 @@ export class AuthService {
 
     return this.prismaService.user
       .create({ data, select: { id: true, email: true } })
+      .then((data) => {
+        this.logService.add({
+          logInfo: `El usuario con el email ${data.email} se ha registrado con la id ${data.id}`,
+          userid: data.id,
+          type: 'Register',
+        });
+
+        return data;
+      })
       .catch((error: PrismaClientKnownRequestError) => {
         if (error.code === 'P2002') {
           const model = String(error.meta.modelName);
@@ -49,7 +58,7 @@ export class AuthService {
     if (!user) {
       await this.logService.add({
         logInfo: `Un usuario intentó iniciar sesión con el email ${loginDTO.email} pero el usuario no existe`,
-        type: 'Auth',
+        type: 'Login',
       });
       throw new HttpException(
         'Contraseña o email inválidos',
@@ -66,7 +75,7 @@ export class AuthService {
       await this.logService.add({
         logInfo: `El usuario con el email ${user.email} intentó iniciar sesión pero la contraseñas no coinciden`,
         userid: user.id,
-        type: 'Auth',
+        type: 'Login',
       });
       throw new HttpException(
         'Contraseña o email inválidos',
@@ -78,7 +87,7 @@ export class AuthService {
     await this.logService.add({
       logInfo: `El usuario con el email ${user.email} inició sesión`,
       userid: user.id,
-      type: 'Auth',
+      type: 'Login',
     });
     return {
       access_token: await this.jwtService.signAsync(payload),

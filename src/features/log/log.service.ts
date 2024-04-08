@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AddProps } from './types/addProperties';
 
@@ -12,7 +12,12 @@ export class LogService {
         .findFirst({
           where: { id: userid },
         })
-        .catch(console.error);
+        .catch(() => {
+          throw new HttpException(
+            'Error service log',
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        });
     }
 
     return this.prismaService.log
@@ -24,9 +29,6 @@ export class LogService {
         },
       })
       .then(() => true)
-      .catch((error) => {
-        console.error(error);
-        return false;
-      });
+      .catch(() => false);
   }
 }
