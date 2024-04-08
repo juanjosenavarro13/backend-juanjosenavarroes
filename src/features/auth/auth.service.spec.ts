@@ -78,6 +78,7 @@ describe('AuthService', () => {
         password_confirmation: 'password',
       };
 
+      jest.spyOn(logService, 'add').mockRejectedValue(true);
       jest.spyOn(prismaService.user, 'create').mockRejectedValue({
         code: 'P2002',
         meta: { modelName: 'User', target: 'email' },
@@ -127,6 +128,7 @@ describe('AuthService', () => {
     });
 
     it('should throw an error if password does not match', async () => {
+      jest.spyOn(logService, 'add').mockResolvedValue(true);
       const loginDTO: LoginDTO = {
         email: 'test@example.com',
         password: 'wrongpassword',
