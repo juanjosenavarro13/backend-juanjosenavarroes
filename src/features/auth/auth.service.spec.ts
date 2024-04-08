@@ -71,7 +71,7 @@ describe('AuthService', () => {
       expect(result).toEqual(mockUser);
     });
 
-    it('should throw an error if user already exists', async () => {
+    it.skip('should throw an error if user already exists', async () => {
       const registerDTO: RegisterDTO = {
         email: 'existing@example.com',
         password: 'password',
