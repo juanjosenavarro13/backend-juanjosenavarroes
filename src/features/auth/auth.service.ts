@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import * as bcrypt from 'bcrypt';
 import { SALT_CRYPTO } from '../../constants/config';
+import { LogService } from '../log/log.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDTO, RegisterDTO } from './DTOS';
 
@@ -11,6 +12,7 @@ export class AuthService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
+    private readonly logService: LogService,
   ) {}
 
   async register(registerDTO: RegisterDTO) {
@@ -45,6 +47,10 @@ export class AuthService {
     });
 
     if (!user) {
+      await this.logService.add({
+        logInfo: `Un usuario intentó iniciar sesión con el email ${loginDTO.email} pero el usuario no existe`,
+        type: 'Auth',
+      });
       throw new HttpException(
         'Contraseña o email inválidos',
         HttpStatus.UNAUTHORIZED,
@@ -57,6 +63,11 @@ export class AuthService {
     );
 
     if (!passwordMatch) {
+      await this.logService.add({
+        logInfo: `El usuario con el email ${user.email} intentó iniciar sesión pero la contraseñas no coinciden`,
+        userid: user.id,
+        type: 'Auth',
+      });
       throw new HttpException(
         'Contraseña o email inválidos',
         HttpStatus.UNAUTHORIZED,
@@ -64,6 +75,11 @@ export class AuthService {
     }
 
     const payload = { id: user.id, email: user.email };
+    await this.logService.add({
+      logInfo: `El usuario con el email ${user.email} inició sesión`,
+      userid: user.id,
+      type: 'Auth',
+    });
     return {
       access_token: await this.jwtService.signAsync(payload),
       user: {

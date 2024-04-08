@@ -6,20 +6,24 @@ import { LoginDTO, RegisterDTO } from './DTOS';
 import { SALT_CRYPTO } from '../../constants/config';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '@prisma/client';
+import { LogService } from '../log/log.service';
 
 describe('AuthService', () => {
   let service: AuthService;
   let prismaService: PrismaService;
   let jwtService: JwtService;
+  let logService: LogService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService, PrismaService, JwtService],
+      providers: [AuthService, PrismaService, JwtService, LogService],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
     prismaService = module.get<PrismaService>(PrismaService);
     jwtService = module.get<JwtService>(JwtService);
+    logService = module.get<LogService>(LogService);
   });
 
   afterAll(async () => {
@@ -53,10 +57,12 @@ describe('AuthService', () => {
         password_confirmation: 'password',
       };
 
-      const mockUser = {
+      const mockUser: User = {
         id: 1,
         email: 'test@example.com',
         password: 'password',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
       jest.spyOn(prismaService.user, 'create').mockResolvedValue(mockUser);
 
@@ -104,6 +110,7 @@ describe('AuthService', () => {
 
   describe('login', () => {
     it('should throw an error if email is not found', async () => {
+      jest.spyOn(logService, 'add').mockResolvedValue(true);
       const loginDTO: LoginDTO = {
         email: 'nonexistent@example.com',
         password: 'password',
@@ -125,10 +132,12 @@ describe('AuthService', () => {
         password: 'wrongpassword',
       };
 
-      const mockUser = {
+      const mockUser: User = {
         id: 1,
         email: 'test@example.com',
         password: await bcrypt.hash('password', SALT_CRYPTO),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(mockUser);
@@ -147,14 +156,17 @@ describe('AuthService', () => {
         password: 'password',
       };
 
-      const mockUser = {
+      const mockUser: User = {
         id: 1,
         email: 'test@example.com',
         password: await bcrypt.hash('password', SALT_CRYPTO),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(mockUser);
       jest.spyOn(jwtService, 'signAsync').mockResolvedValue('token');
+      jest.spyOn(logService, 'add').mockResolvedValue(true);
 
       const result = await service.login(loginDTO);
 
