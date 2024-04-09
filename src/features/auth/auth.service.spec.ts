@@ -16,6 +16,7 @@ describe('AuthService', () => {
   let logService: LogService;
 
   beforeEach(async () => {
+    jest.spyOn(logService, 'add').mockRejectedValue(true);
     const module: TestingModule = await Test.createTestingModule({
       providers: [AuthService, PrismaService, JwtService, LogService],
     }).compile();
@@ -78,7 +79,6 @@ describe('AuthService', () => {
         password_confirmation: 'password',
       };
 
-      jest.spyOn(logService, 'add').mockRejectedValue(true);
       jest.spyOn(prismaService.user, 'create').mockRejectedValue({
         code: 'P2002',
         meta: { modelName: 'User', target: 'email' },
