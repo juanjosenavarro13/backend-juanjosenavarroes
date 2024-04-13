@@ -1,7 +1,16 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDTO, RegisterDTO } from './DTOS';
+import { AuthGuard } from './auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -34,5 +43,12 @@ export class AuthController {
   @Post('login')
   login(@Body() loginDTO: LoginDTO) {
     return this.AuthService.login(loginDTO);
+  }
+
+  @ApiBearerAuth('APIKey-auth')
+  @UseGuards(AuthGuard)
+  @Get('prueba')
+  prueba() {
+    return 'ok';
   }
 }
