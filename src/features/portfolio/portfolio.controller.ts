@@ -1,7 +1,14 @@
-import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Query,
+} from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { forkJoin } from 'rxjs';
 import { PortfolioService } from './portfolio.service';
+import { VALID_LANG } from 'src/constants/valid-lang';
 
 @ApiTags('Portfolio')
 @Controller('portfolio')
@@ -15,7 +22,8 @@ export class PortfolioController {
   @Get()
   findAll(@Query() query) {
     const lang = query?.lang?.toLowerCase() || 'es';
-    console.log(lang);
+    if (!VALID_LANG.includes(lang))
+      throw new HttpException('idioma invalido', HttpStatus.BAD_REQUEST);
     return forkJoin({
       hero: this.portfolioService.hero(lang),
       links: this.portfolioService.links(),
