@@ -18,6 +18,7 @@ export class AuthService {
 
   async register(registerDTO: RegisterDTO) {
     if (registerDTO.password !== registerDTO.password_confirmation) {
+      this.logger.warn('passwords no match', registerDTO);
       throw new HttpException(
         'Las contraseñas no coinciden',
         HttpStatus.BAD_REQUEST,
@@ -29,6 +30,9 @@ export class AuthService {
 
     return this.prismaService.user
       .create({ data, select: { id: true, email: true } })
+      .then((data) => {
+        this.logger.log('user create', data);
+      })
       .catch((error: PrismaClientKnownRequestError) => {
         if (error.code === 'P2002') {
           const model = String(error.meta.modelName);
@@ -38,6 +42,7 @@ export class AuthService {
             HttpStatus.CONFLICT,
           );
         }
+        this.logger.error('error', error);
         throw error;
       });
   }
