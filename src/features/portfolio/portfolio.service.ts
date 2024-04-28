@@ -16,4 +16,15 @@ export class PortfolioService {
       email: 'juanjosenavarroperea@gmail.com',
     });
   }
+  public info() {
+    const name = 'Juan José';
+    const firstSurname = 'Navarro';
+    const secondSurname = 'Perea';
+    return of({
+      name,
+      firstSurname,
+      secondSurname,
+      fullName: name + ' ' + firstSurname + ' ' + secondSurname,
+    });
+  }
 }

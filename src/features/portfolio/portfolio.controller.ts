@@ -27,6 +27,7 @@ export class PortfolioController {
     return forkJoin({
       hero: this.portfolioService.hero(lang),
       links: this.portfolioService.links(),
+      info: this.portfolioService.info(),
     });
   }
 }
