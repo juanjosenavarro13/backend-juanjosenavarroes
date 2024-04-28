@@ -1,5 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get, HttpStatus } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { forkJoin, map } from 'rxjs';
 import { PortfolioService } from './portfolio.service';
 
@@ -8,6 +8,10 @@ import { PortfolioService } from './portfolio.service';
 export class PortfolioController {
   constructor(private readonly portfolioService: PortfolioService) {}
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Devuelve información de portfolio',
+  })
   @Get()
   findAll() {
     return forkJoin([
