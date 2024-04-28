@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 import { of } from 'rxjs';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class PortfolioService {
@@ -14,6 +14,17 @@ export class PortfolioService {
     return of({
       linkedin: 'https://www.linkedin.com/in/juan-jose-navarro-perea/',
       email: 'juanjosenavarroperea@gmail.com',
+    });
+  }
+  public info() {
+    const name = 'Juan José';
+    const firstSurname = 'Navarro';
+    const secondSurname = 'Perea';
+    return of({
+      name,
+      firstSurname,
+      secondSurname,
+      fullName: name + ' ' + firstSurname + ' ' + secondSurname,
     });
   }
 }
