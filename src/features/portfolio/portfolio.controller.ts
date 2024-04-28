@@ -8,7 +8,7 @@ import {
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { forkJoin } from 'rxjs';
 import { PortfolioService } from './portfolio.service';
-import { VALID_LANG } from 'src/constants/valid-lang';
+import { VALID_LANG } from '../../constants/valid-lang';
 
 @ApiTags('Portfolio')
 @Controller('portfolio')
