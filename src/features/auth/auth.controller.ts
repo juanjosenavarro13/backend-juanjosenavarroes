@@ -1,16 +1,15 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Post,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { LoginDTO, RegisterDTO } from './DTOS';
-import { AuthGuard } from './auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -25,6 +24,8 @@ export class AuthController {
     status: HttpStatus.CREATED,
     description: 'Usuario registrado',
   })
+  @ApiBearerAuth('APIKey-auth')
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   register(@Body() registerDTO: RegisterDTO) {
@@ -43,12 +44,5 @@ export class AuthController {
   @Post('login')
   login(@Body() loginDTO: LoginDTO) {
     return this.AuthService.login(loginDTO);
-  }
-
-  @ApiBearerAuth('APIKey-auth')
-  @UseGuards(AuthGuard)
-  @Get('prueba')
-  prueba() {
-    return 'ok';
   }
 }

@@ -32,6 +32,7 @@ export class AuthService {
       .create({ data, select: { id: true, email: true } })
       .then((data) => {
         this.logger.log('user create', data);
+        return data;
       })
       .catch((error: PrismaClientKnownRequestError) => {
         if (error.code === 'P2002') {
