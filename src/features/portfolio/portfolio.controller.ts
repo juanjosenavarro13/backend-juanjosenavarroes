@@ -28,6 +28,7 @@ export class PortfolioController {
       hero: this.portfolioService.hero(lang),
       links: this.portfolioService.links(),
       info: this.portfolioService.info(),
+      experience: this.portfolioService.experience(lang),
     });
   }
 }
