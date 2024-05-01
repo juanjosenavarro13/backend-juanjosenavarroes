@@ -27,4 +27,11 @@ export class PortfolioService {
       fullName: name + ' ' + firstSurname + ' ' + secondSurname,
     });
   }
+
+  experience(lang: string) {
+    return this.prismaService.portfolio_experience.findMany({
+      where: { language: { equals: lang } },
+      orderBy: { endDate: { sort: 'desc' } },
+    });
+  }
 }

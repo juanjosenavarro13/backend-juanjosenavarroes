@@ -22,3 +22,14 @@ model Portfolio_hero {
   title       String
   description String
 }
+
+model Portfolio_experience {
+  id          Int       @id @default(autoincrement())
+  language    String
+  title       String
+  company     String
+  startDate   DateTime
+  endDate     DateTime?
+  description String
+  url         String?
+}
