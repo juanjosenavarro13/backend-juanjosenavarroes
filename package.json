@@ -2,7 +2,7 @@
   "name": "backend-juanjosenavarroes",
   "author": "Juan José Navarro Perea",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.1",
   "scripts": {
     "build": "nest build",
     "start": "nest start",
@@ -19,6 +19,9 @@
     "delete-old-branch": "git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d",
     "prisma:migrate": "npx prisma migrate dev",
     "postinstall": "prisma generate",
+    "version:patch": "npm version patch && git push && git push --tags",
+    "version:minor": "npm version minor && git push && git push --tags",
+    "version:major": "npm version major && git push && git push --tags",
     "prepare": "husky"
   },
   "dependencies": {
