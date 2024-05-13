@@ -8,17 +8,27 @@ export class UserService {
     this.logger = new Logger('USER');
   }
 
-  async findAll() {
-    const users = await this.prismaService.user.findMany({
-      select: {
-        id: true,
-        email: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+  async findAll(take: number = 10, skip: number = 0) {
+    const [users, totalUsers] = await Promise.all([
+      this.prismaService.user.findMany({
+        take,
+        skip,
+        select: {
+          id: true,
+          email: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+      this.prismaService.user.count(),
+    ]);
+
+    const totalPages = Math.ceil(totalUsers / take);
     this.logger.log('find all users', users);
-    return users;
+    return { totalPages, users };
   }
 
   async findUserById(id: number) {
