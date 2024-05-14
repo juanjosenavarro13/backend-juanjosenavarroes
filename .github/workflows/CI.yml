@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [18.x]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [18.x]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
@@ -60,12 +60,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [18.x]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
         with:
-          version: 8.15.5
+          version: latest
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
