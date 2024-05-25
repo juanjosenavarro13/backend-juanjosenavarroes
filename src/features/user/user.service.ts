@@ -42,8 +42,21 @@ export class UserService {
       },
     });
 
-    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    if (!user) {
+      this.logger.log(`user not found id ${id}`);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
     this.logger.log(`find user id ${id}`, user);
     return user;
+  }
+  async deleteUserById(id: number) {
+    await this.prismaService.user
+      .delete({ where: { id } })
+      .then((user) => {
+        this.logger.log(`find user id ${id} and delete`, user);
+      })
+      .catch((err) => {
+        this.logger.log(`error user id ${id} and delete`, err);
+      });
   }
 }

@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpException,
@@ -55,5 +56,28 @@ export class UserController {
     if (isNaN(validId))
       throw new HttpException('Invalid ID', HttpStatus.BAD_REQUEST);
     return this.userService.findUserById(validId);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: '{{id}} invalida',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: '{{id}} no encontrada',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'usuario {{id}} eliminado',
+  })
+  @ApiBearerAuth('APIKey-auth')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  @Delete(':id')
+  deleteById(@Param('id') id: string) {
+    const validId = Number(id);
+    if (isNaN(validId))
+      throw new HttpException('Invalid ID', HttpStatus.BAD_REQUEST);
+    return this.userService.deleteUserById(validId);
   }
 }
