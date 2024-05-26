@@ -42,10 +42,12 @@ export class UserService {
       },
     });
 
+
     if (!user) {
       this.logger.log(`user not found id ${id}`);
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
+
     this.logger.log(`find user id ${id}`, user);
     return user;
   }
