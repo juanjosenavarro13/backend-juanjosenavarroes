@@ -6,6 +6,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -79,5 +80,28 @@ export class UserController {
     if (isNaN(validId))
       throw new HttpException('Invalid ID', HttpStatus.BAD_REQUEST);
     return this.userService.deleteUserById(validId);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: '{{id}} invalida',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: '{{id}} no encontrada',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'usuario {{id}} reinicio de password',
+  })
+  @ApiBearerAuth('APIKey-auth')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  @Put(':id')
+  resetPasswordById(@Param('id') id: string) {
+    const validId = Number(id);
+    if (isNaN(validId))
+      throw new HttpException('Invalid ID', HttpStatus.BAD_REQUEST);
+    return this.userService.resetPasswordById(validId);
   }
 }

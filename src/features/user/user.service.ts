@@ -1,5 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { SALT_CRYPTO } from 'src/constants/config';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -58,6 +60,19 @@ export class UserService {
       })
       .catch((err) => {
         this.logger.log(`error user id ${id} and delete`, err);
+      });
+  }
+
+  async resetPasswordById(id: number) {
+    const password = await bcrypt.hash('123123', SALT_CRYPTO);
+
+    await this.prismaService.user
+      .update({ where: { id }, data: { password } })
+      .then((res) => {
+        this.logger.log(`reset password user ${id}`, res);
+      })
+      .catch((err) => {
+        this.logger.error(`reset password user ${id} ERROR`, err);
       });
   }
 }
