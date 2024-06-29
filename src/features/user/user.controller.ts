@@ -8,6 +8,7 @@ import {
   Param,
   Put,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -27,13 +28,21 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)
   @Get()
-  findAll(@Query() query) {
-    const take = Number(query.take ?? 10);
-    const skip = Number(query.skip ?? 0);
+  async findAll(
+    @Req() request: Request,
+    @Query('take') take: number = 10,
+    @Query('skip') skip: number = 0,
+  ) {
     if (isNaN(take) || isNaN(skip))
       throw new HttpException('invalid params', HttpStatus.BAD_REQUEST);
 
-    return this.userService.findAll(take, skip);
+    const user = request['user'];
+
+    return this.userService.findAll(
+      Number(user.id),
+      Number(take),
+      Number(skip),
+    );
   }
 
   @ApiResponse({
