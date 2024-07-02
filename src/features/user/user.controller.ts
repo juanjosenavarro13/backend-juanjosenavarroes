@@ -8,6 +8,7 @@ import {
   Param,
   Put,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -15,6 +16,8 @@ import { UserService } from './user.service';
 import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('User')
+@ApiBearerAuth('APIKey-auth')
+@UseGuards(AuthGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -23,17 +26,23 @@ export class UserController {
     status: HttpStatus.OK,
     description: 'listado de usuarios',
   })
-  @ApiBearerAuth('APIKey-auth')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
   @Get()
-  findAll(@Query() query) {
-    const take = Number(query.take ?? 10);
-    const skip = Number(query.skip ?? 0);
+  async findAll(
+    @Req() request: Request,
+    @Query('take') take: number = 10,
+    @Query('skip') skip: number = 0,
+  ) {
     if (isNaN(take) || isNaN(skip))
       throw new HttpException('invalid params', HttpStatus.BAD_REQUEST);
 
-    return this.userService.findAll(take, skip);
+    const user = request['user'];
+
+    return this.userService.findAll(
+      Number(user.id),
+      Number(take),
+      Number(skip),
+    );
   }
 
   @ApiResponse({
@@ -48,9 +57,7 @@ export class UserController {
     status: HttpStatus.OK,
     description: 'datos del usuario {{id}}',
   })
-  @ApiBearerAuth('APIKey-auth')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
   @Get(':id')
   findById(@Param('id') id: string) {
     const validId = Number(id);
@@ -71,9 +78,7 @@ export class UserController {
     status: HttpStatus.OK,
     description: 'usuario {{id}} eliminado',
   })
-  @ApiBearerAuth('APIKey-auth')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
   @Delete(':id')
   deleteById(@Param('id') id: string) {
     const validId = Number(id);
@@ -94,9 +99,7 @@ export class UserController {
     status: HttpStatus.OK,
     description: 'usuario {{id}} reinicio de password',
   })
-  @ApiBearerAuth('APIKey-auth')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
   @Put(':id')
   resetPasswordById(@Param('id') id: string) {
     const validId = Number(id);

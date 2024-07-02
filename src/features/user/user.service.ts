@@ -10,7 +10,7 @@ export class UserService {
     this.logger = new Logger('USER');
   }
 
-  async findAll(take: number = 10, skip: number = 0) {
+  async findAll(userid: number, take: number = 10, skip: number = 0) {
     const [users, totalUsers] = await Promise.all([
       this.prismaService.user.findMany({
         take,
@@ -24,8 +24,15 @@ export class UserService {
         orderBy: {
           createdAt: 'desc',
         },
+        where: {
+          id: { not: userid },
+        },
       }),
-      this.prismaService.user.count(),
+      this.prismaService.user.count({
+        where: {
+          id: { not: userid },
+        },
+      }),
     ]);
 
     const totalPages = Math.ceil(totalUsers / take);
