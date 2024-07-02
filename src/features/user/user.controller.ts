@@ -16,6 +16,8 @@ import { UserService } from './user.service';
 import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('User')
+@ApiBearerAuth('APIKey-auth')
+@UseGuards(AuthGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -24,9 +26,7 @@ export class UserController {
     status: HttpStatus.OK,
     description: 'listado de usuarios',
   })
-  @ApiBearerAuth('APIKey-auth')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
   @Get()
   async findAll(
     @Req() request: Request,
@@ -57,9 +57,7 @@ export class UserController {
     status: HttpStatus.OK,
     description: 'datos del usuario {{id}}',
   })
-  @ApiBearerAuth('APIKey-auth')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
   @Get(':id')
   findById(@Param('id') id: string) {
     const validId = Number(id);
@@ -80,9 +78,7 @@ export class UserController {
     status: HttpStatus.OK,
     description: 'usuario {{id}} eliminado',
   })
-  @ApiBearerAuth('APIKey-auth')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
   @Delete(':id')
   deleteById(@Param('id') id: string) {
     const validId = Number(id);
@@ -103,9 +99,7 @@ export class UserController {
     status: HttpStatus.OK,
     description: 'usuario {{id}} reinicio de password',
   })
-  @ApiBearerAuth('APIKey-auth')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
   @Put(':id')
   resetPasswordById(@Param('id') id: string) {
     const validId = Number(id);
