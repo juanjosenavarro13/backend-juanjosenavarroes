@@ -28,7 +28,7 @@ export class ArticleService {
           createdAt: 'desc',
         },
       }),
-      this.prismaService.user.count({}),
+      this.prismaService.article.count(),
     ]);
 
     const totalPages = Math.ceil(totalArticles / take);
