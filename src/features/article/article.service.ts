@@ -27,6 +27,16 @@ export class ArticleService {
         orderBy: {
           createdAt: 'desc',
         },
+        include: {
+          user: {
+            select: {
+              id: true,
+              email: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+          },
+        },
       }),
       this.prismaService.article.count(),
     ]);
