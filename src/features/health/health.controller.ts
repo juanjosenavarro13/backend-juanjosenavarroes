@@ -24,6 +24,7 @@ export class HealthController {
   async check() {
     const health = await this.health.check([
       () => this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),
+      () => this.memory.checkRSS('memory_rss', 150 * 1024 * 1024),
     ]);
     this.logger.log('health', health);
     return health;
