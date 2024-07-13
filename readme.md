@@ -1,3 +1,9 @@
+# Github actions
+
+[![Run Lint, Format, and Test](https://github.com/juanjosenavarro13/backend-juanjosenavarroes/actions/workflows/CI.yml/badge.svg)](https://github.com/juanjosenavarro13/backend-juanjosenavarroes/actions/workflows/CI.yml)
+[![CD](https://github.com/juanjosenavarro13/backend-juanjosenavarroes/actions/workflows/CD.yml/badge.svg)](https://github.com/juanjosenavarro13/backend-juanjosenavarroes/actions/workflows/CD.yml)
+[![CodeQL](https://github.com/juanjosenavarro13/backend-juanjosenavarroes/actions/workflows/codeQL.yml/badge.svg)](https://github.com/juanjosenavarro13/backend-juanjosenavarroes/actions/workflows/codeQL.yml)
+
 # Git flow
 
 ```mermaid
