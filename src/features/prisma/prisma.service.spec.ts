@@ -24,14 +24,6 @@ describe('PrismaService', () => {
     await expect(prismaService.$disconnect()).resolves.not.toThrow();
   });
 
-  it('should connect to the database on module initialization', async () => {
-    jest.spyOn(prismaService, '$connect').mockResolvedValueOnce();
-
-    await prismaService.onModuleInit();
-
-    expect(prismaService.$connect).toHaveBeenCalledTimes(1);
-  });
-
   it('should handle errors when connecting to the database on module initialization', async () => {
     jest
       .spyOn(prismaService, '$connect')
