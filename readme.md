@@ -22,11 +22,17 @@ gitGraph
 
 ```mermaid
 flowchart LR
-    main[Main] --> featureBranch(Feature branch)
-    featureBranch --> pr
-    pr(Pull Request) --> githubUnitTest
-    githubUnitTest(Unit test) --> main
-    main --> githubUnitTest(Unit test)
-    main --> |Deplay 5 min| githubE2ETest(E2E test)
+    main[Main]
+    e2etest[E2E Test]
+    unittest[Unit Test]
+    codeQl[Code QL]
+    featureBranch[Feature Branch]
+    pr[Pull Request]
 
+    main --> featureBranch
+    featureBranch --> pr
+    pr --> unittest
+    unittest -->|deploy| main
+    main --> e2etest
+    main --> codeQl
 ```
