@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { SALT_CRYPTO } from 'src/constants/config';
 import * as bcrypt from 'bcrypt';
+import { SALT_CRYPTO } from 'src/constants/config';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UserService {
