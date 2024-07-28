@@ -16,7 +16,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "delete-old-branch": "git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d",
+    "delete-old-branch": "git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d -f",
     "prisma:migrate": "npx prisma migrate dev",
     "postinstall": "prisma generate",
     "version:patch": "npm version patch && git push && git push --tags",
